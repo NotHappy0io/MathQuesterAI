@@ -273,12 +273,7 @@ export default function Chat() {
               {modelInfo.icon}
             </span>
             <div>
-              <h2>MathQuest · {state.isGuest ? "Guest" : modelInfo.name}</h2>
-              <span className="topbar-desc">
-                {state.isGuest
-                  ? "Basic math help — sign up for more"
-                  : modelInfo.desc}
-              </span>
+              <h2>MathQuest</h2>
             </div>
           </div>
           {!state.isGuest && (
@@ -295,13 +290,8 @@ export default function Chat() {
           {/* Welcome message */}
           {chatMessages.length === 0 && (
             <div className="chat-welcome">
-              <span className="welcome-icon">📐</span>
-              <h2>Hey {user?.name}! 👋</h2>
-              <p>
-                {state.isGuest
-                  ? "I can help with basic math. Sign up for the full experience!"
-                  : `I'm your grade ${user?.grade} math tutor. Ask me anything!`}
-              </p>
+              <h2>Hello, {user?.name || "there"}</h2>
+              <p>How can I help you with math today?</p>
               <div className="welcome-suggestions">
                 <button
                   onClick={() => setInput("I need help with my homework")}
