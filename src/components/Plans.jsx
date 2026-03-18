@@ -116,14 +116,14 @@ export default function Plans() {
           </div>
           <ul className="plan-features">
             <li>
-              ✅ <strong>Unlimited credits</strong>
+              ✅ <strong>1,000 credits/month</strong>
             </li>
             <li>✅ Fast model (free)</li>
-            <li>✅ Advanced model (free)</li>
-            <li>✅ Pro model (free)</li>
+            <li>✅ Advanced model (5 credits)</li>
+            <li>✅ Pro model (10 credits)</li>
             <li>✅ Math symbol toolbar</li>
             <li>✅ Grade-adapted help</li>
-            <li>💎 No limits whatsoever</li>
+            <li>💎 20x more credits than Free</li>
           </ul>
           {currentPlan === "max" ? (
             <div className="plan-current-tag">Current Plan</div>
@@ -132,7 +132,7 @@ export default function Plans() {
               className="btn btn-premium btn-block btn-lg"
               onClick={() => handleSubscribe("max")}
             >
-              Go Unlimited
+              Go Max
             </button>
           )}
         </div>

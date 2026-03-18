@@ -6,6 +6,7 @@ import {
   SYMBOL_INSERT,
 } from "../store/AppContext";
 import { getAIResponse, getGuestAIResponse } from "../services/ai";
+import Settings from "./Settings";
 
 export default function Chat() {
   const { state, dispatch } = useApp();
@@ -15,6 +16,7 @@ export default function Chat() {
   const messagesEnd = useRef(null);
   const inputRef = useRef(null);
   const fileInputRef = useRef(null);
+  const [showSettings, setShowSettings] = useState(false);
   const user = state.user;
   const model = state.isGuest ? "fast" : state.selectedModel;
   const modelInfo = MODELS[model];
@@ -73,7 +75,7 @@ export default function Chat() {
     setInput("");
     setPendingImage(null);
 
-    if (!state.isGuest && user?.plan !== "max" && state.credits < info.cost) {
+    if (!state.isGuest && state.credits < info.cost) {
       dispatch({ type: "CREDIT_ERROR", payload: { text, model } });
       return;
     }
@@ -112,11 +114,7 @@ export default function Chat() {
     }
   }
 
-  const creditsDisplay = state.isGuest
-    ? "—"
-    : user?.plan === "max"
-      ? "∞"
-      : state.credits;
+  const creditsDisplay = state.isGuest ? "—" : state.credits;
 
   return (
     <div className="chat-screen">
@@ -151,7 +149,7 @@ export default function Chat() {
                 </span>
                 <span className="plan-credits-info">
                   {user?.plan === "max"
-                    ? "Unlimited"
+                    ? "1000/mo"
                     : user?.plan === "pro"
                       ? "200/mo"
                       : "50/mo"}
@@ -238,27 +236,21 @@ export default function Chat() {
 
         <div className="sidebar-bottom">
           {!state.isGuest && (
-            <>
-              <button
-                className="sidebar-btn"
-                onClick={() => dispatch({ type: "NAVIGATE", payload: "plans" })}
-              >
-                💎 Upgrade Plan
-              </button>
-              <button
-                className="sidebar-btn"
-                onClick={() => dispatch({ type: "CLEAR_CHAT" })}
-              >
-                🗑️ Clear Chat
-              </button>
-            </>
+            <button
+              className="sidebar-btn"
+              onClick={() => setShowSettings(true)}
+            >
+              ⚙️ Settings
+            </button>
           )}
-          <button
-            className="sidebar-btn danger"
-            onClick={() => dispatch({ type: "LOGOUT" })}
-          >
-            🚪 {state.isGuest ? "Exit Guest Mode" : "Logout"}
-          </button>
+          {state.isGuest && (
+            <button
+              className="sidebar-btn danger"
+              onClick={() => dispatch({ type: "LOGOUT" })}
+            >
+              🚪 Exit Guest Mode
+            </button>
+          )}
         </div>
       </aside>
 
@@ -468,6 +460,8 @@ export default function Chat() {
           </button>
         </div>
       </main>
+
+      {showSettings && <Settings onClose={() => setShowSettings(false)} />}
     </div>
   );
 }

@@ -211,7 +211,7 @@ const MODELS = {
 const PLANS = {
   free: { name: "Free", credits: 50, price: 0 },
   pro: { name: "Pro", credits: 200, price: 3.99 },
-  max: { name: "Max", credits: Infinity, price: 9.99 },
+  max: { name: "Max", credits: 1000, price: 9.99 },
 };
 
 /* ── Account helpers ── */
@@ -248,6 +248,7 @@ const freshState = {
   credits: 50,
   totalCreditsUsed: 0,
   selectedModel: "fast",
+  theme: "dark",
   chats: [],
   activeChatId: null,
 };
@@ -360,8 +361,7 @@ function reducer(state, action) {
     case "SEND_USER_MSG": {
       const { text, model, image } = action.payload;
       const info = MODELS[model];
-      const newCredits =
-        state.isGuest || state.user?.plan === "max"
+      const newCredits = state.isGuest
           ? state.credits
           : state.credits - info.cost;
       const newChats = state.chats.map((c) => {
@@ -477,13 +477,16 @@ function reducer(state, action) {
 
     case "SET_PLAN": {
       const plan = action.payload;
-      const cr = plan === "max" ? Infinity : plan === "pro" ? 200 : 50;
+      const cr = plan === "max" ? 1000 : plan === "pro" ? 200 : 50;
       return {
         ...state,
         user: { ...state.user, plan },
         credits: Math.max(state.credits, cr),
       };
     }
+
+    case "SET_THEME":
+      return { ...state, theme: action.payload };
 
     case "SET_API_KEY":
       return { ...state, apiKey: action.payload };
