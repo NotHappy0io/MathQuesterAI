@@ -1,5 +1,4 @@
-const BUILT_IN_KEY =
-  "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";
+const OPENROUTER_API_KEY = import.meta.env.VITE_OPENROUTER_API_KEY?.trim();
 
 const MODEL_IDS = {
   fast: "openai/gpt-5.4-nano",
@@ -184,6 +183,10 @@ export async function getGuestAIResponse(
   chatHistory,
   imageBase64,
 ) {
+  if (!OPENROUTER_API_KEY) {
+    throw new Error("Missing API key. Set VITE_OPENROUTER_API_KEY.");
+  }
+
   const messages = [{ role: "system", content: GUEST_SYSTEM_PROMPT }];
   const recent = chatHistory.slice(-4);
   for (const msg of recent) {
@@ -203,7 +206,7 @@ export async function getGuestAIResponse(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${BUILT_IN_KEY}`,
+      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
     },
     body: JSON.stringify({
       model: useModel,
@@ -232,6 +235,10 @@ export async function getAIResponse(
   userName,
   imageBase64,
 ) {
+  if (!OPENROUTER_API_KEY) {
+    throw new Error("Missing API key. Set VITE_OPENROUTER_API_KEY.");
+  }
+
   const buildPrompt = SYSTEM_PROMPTS[model] || SYSTEM_PROMPTS.fast;
   const systemPrompt = buildPrompt(grade, userName);
   const baseModel = MODEL_IDS[model] || MODEL_IDS.fast;
@@ -263,7 +270,7 @@ export async function getAIResponse(
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${BUILT_IN_KEY}`,
+      Authorization: `Bearer ${OPENROUTER_API_KEY}`,
     },
     body: JSON.stringify({
       model: aiModel,

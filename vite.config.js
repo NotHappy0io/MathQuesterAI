@@ -1,7 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
+const repoName = process.env.GITHUB_REPOSITORY?.split("/")[1];
+const base =
+  !repoName || repoName.endsWith(".github.io") ? "/" : `/${repoName}/`;
+
 export default defineConfig({
   plugins: [react()],
-  base: "/MathQuest/", // This needs to match your GitHub repository name exactly
+  base,
 });
